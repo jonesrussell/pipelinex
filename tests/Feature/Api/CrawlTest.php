@@ -145,3 +145,54 @@ test('GET /api/v1/crawl/{id} returns 404 for nonexistent job', function () {
         ->getJson('/api/v1/crawl/crawl_nonexistent')
         ->assertNotFound();
 });
+
+test('GET /api/v1/crawl/{id} returns failed status', function () {
+    $user = User::factory()->create();
+    $result = $user->tenant->generateApiKey('Test', 'live');
+
+    $crawlJob = CrawlJob::create([
+        'tenant_id' => $user->tenant->id,
+        'api_key_id' => $result['apiKey']->id,
+        'url' => 'https://example.com/failing',
+        'status' => 'failed',
+        'error_code' => 'processing_error',
+        'error_message' => 'Connection timeout',
+        'completed_at' => now(),
+    ]);
+
+    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+        ->getJson('/api/v1/crawl/' . $crawlJob->id)
+        ->assertOk()
+        ->assertJsonPath('status', 'failed')
+        ->assertJsonPath('error.code', 'processing_error')
+        ->assertJsonPath('error.message', 'Connection timeout');
+});
+
+test('POST /api/v1/crawl stores options', function () {
+    Queue::fake();
+
+    $user = User::factory()->create();
+    $result = $user->tenant->generateApiKey('Test', 'live');
+
+    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+        ->postJson('/api/v1/crawl', [
+            'url' => 'https://example.com',
+            'options' => ['timeout' => 20, 'include_html' => true],
+        ])
+        ->assertStatus(202);
+
+    $job = CrawlJob::where('tenant_id', $user->tenant->id)->first();
+    expect($job->options)->toBe(['timeout' => 20, 'include_html' => true]);
+});
+
+test('POST /api/v1/crawl rejects invalid timeout', function () {
+    $user = User::factory()->create();
+    $result = $user->tenant->generateApiKey('Test', 'live');
+
+    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+        ->postJson('/api/v1/crawl', [
+            'url' => 'https://example.com',
+            'options' => ['timeout' => 999],
+        ])
+        ->assertUnprocessable();
+});

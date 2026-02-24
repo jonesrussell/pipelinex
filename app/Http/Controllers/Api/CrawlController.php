@@ -94,6 +94,17 @@ class CrawlController extends Controller
             ]);
         }
 
+        if (! $crawlJob->crawlResult) {
+            return response()->json([
+                'id' => $crawlJob->id,
+                'status' => 'failed',
+                'error' => [
+                    'code' => 'result_missing',
+                    'message' => 'Crawl result data is unavailable',
+                ],
+            ], 500);
+        }
+
         return response()->json($this->formatResponse($crawlJob));
     }
 
