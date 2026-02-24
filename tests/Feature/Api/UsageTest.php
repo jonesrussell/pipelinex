@@ -26,7 +26,7 @@ test('GET /api/v1/usage returns usage stats', function () {
             'plan',
             'period' => ['start', 'end'],
             'crawls' => ['used', 'limit', 'remaining'],
-            'rate_limit' => ['requests_per_minute'],
+            'rate_limit' => ['requests_per_minute', 'current'],
         ]);
 });
 

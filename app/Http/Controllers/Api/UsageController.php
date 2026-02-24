@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CrawlJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 
 class UsageController extends Controller
 {
@@ -17,6 +18,9 @@ class UsageController extends Controller
             ->where('status', 'completed')
             ->where('created_at', '>=', now()->startOfMonth())
             ->count();
+
+        $rateLimitKey = 'api_rate_limit:'.$tenant->id;
+        $currentRate = $tenant->rate_limit_rpm - RateLimiter::remaining($rateLimitKey, $tenant->rate_limit_rpm);
 
         return response()->json([
             'plan' => $tenant->plan,
@@ -31,6 +35,7 @@ class UsageController extends Controller
             ],
             'rate_limit' => [
                 'requests_per_minute' => $tenant->rate_limit_rpm,
+                'current' => $currentRate,
             ],
         ]);
     }
