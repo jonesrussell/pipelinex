@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'north_cloud' => [
+        'crawler_url' => env('NORTH_CLOUD_CRAWLER_URL', 'http://localhost:8060'),
+        'classifier_url' => env('NORTH_CLOUD_CLASSIFIER_URL', 'http://localhost:8071'),
+        'internal_secret' => env('NORTH_CLOUD_INTERNAL_SECRET', ''),
+    ],
+
 ];
