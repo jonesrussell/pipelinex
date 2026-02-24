@@ -37,6 +37,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('dashboard/usage', [\App\Http\Controllers\Dashboard\UsageDashboardController::class, 'index'])
         ->name('dashboard.usage');
+
+    Route::get('dashboard/billing/checkout/{plan}', [\App\Http\Controllers\Dashboard\BillingController::class, 'checkout'])
+        ->name('dashboard.billing.checkout')
+        ->where('plan', 'starter|pro');
+
+    Route::get('dashboard/billing/portal', [\App\Http\Controllers\Dashboard\BillingController::class, 'portal'])
+        ->name('dashboard.billing.portal');
 });
 
 require __DIR__.'/settings.php';

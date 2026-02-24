@@ -35,6 +35,13 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'prices' => [
+            'starter' => env('STRIPE_PRICE_STARTER'),
+            'pro' => env('STRIPE_PRICE_PRO'),
+        ],
+    ],
+
     'north_cloud' => [
         'crawler_url' => env('NORTH_CLOUD_CRAWLER_URL', 'http://localhost:8060'),
         'classifier_url' => env('NORTH_CLOUD_CLASSIFIER_URL', 'http://localhost:8071'),
