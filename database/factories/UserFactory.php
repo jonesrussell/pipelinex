@@ -36,6 +36,23 @@ class UserFactory extends Factory
     }
 
     /**
+     * Configure the model factory.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (\App\Models\User $user) {
+            if (! $user->tenant()->exists()) {
+                $user->tenant()->create([
+                    'plan' => 'free',
+                    'monthly_crawl_limit' => 100,
+                    'rate_limit_rpm' => 5,
+                ]);
+                $user->load('tenant');
+            }
+        });
+    }
+
+    /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static
