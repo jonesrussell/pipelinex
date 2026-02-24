@@ -41,4 +41,8 @@ return [
         'internal_secret' => env('NORTH_CLOUD_INTERNAL_SECRET', ''),
     ],
 
+    'pipelinex' => [
+        'crawl_wait_timeout' => (int) env('CRAWL_WAIT_TIMEOUT', 30),
+    ],
+
 ];

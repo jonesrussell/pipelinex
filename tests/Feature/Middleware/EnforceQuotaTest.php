@@ -2,15 +2,18 @@
 
 use App\Models\CrawlJob;
 use App\Models\User;
+use Illuminate\Support\Facades\Queue;
 
 test('allows request when quota not exceeded', function () {
+    Queue::fake();
+
     $user = User::factory()->create();
     $tenant = $user->tenant;
     $result = $tenant->generateApiKey('Test', 'live');
 
     $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->postJson('/api/v1/crawl', ['url' => 'https://example.com'])
-        ->assertStatus(501); // passes quota, hits placeholder
+        ->assertStatus(202); // passes quota, controller dispatches job and returns 202
 });
 
 test('rejects request when quota exceeded', function () {
