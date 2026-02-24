@@ -23,7 +23,14 @@ class CrawlController extends Controller
             'options' => $request->validated('options', []),
         ]);
 
-        ProcessCrawlJob::dispatch($crawlJob->id);
+        try {
+            ProcessCrawlJob::dispatch($crawlJob->id);
+        } catch (\Throwable) {
+            // Sync queue driver re-throws job exceptions; the job already
+            // marked the CrawlJob as failed in its catch block, so we
+            // just swallow the exception here and let the status check
+            // below handle it.
+        }
 
         // Sync-wait: poll DB until result arrives or timeout
         $waitTimeout = (int) config('services.pipelinex.crawl_wait_timeout', 30);
