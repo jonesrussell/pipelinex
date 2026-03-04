@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\CrawlJob;
-use App\Models\User;
 use App\Models\UsageRecord;
+use App\Models\User;
 
 test('aggregate usage command creates usage records', function () {
     $user = User::factory()->create();

@@ -36,8 +36,8 @@ class BillingController extends Controller
         return $request->user()
             ->newSubscription('default', $priceId)
             ->checkout([
-                'success_url' => route('dashboard.usage') . '?checkout=success',
-                'cancel_url' => route('dashboard.usage') . '?checkout=cancel',
+                'success_url' => route('dashboard.usage').'?checkout=success',
+                'cancel_url' => route('dashboard.usage').'?checkout=cancel',
             ])
             ->redirect();
     }

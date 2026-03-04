@@ -39,7 +39,7 @@ test('history detail shows crawl job', function () {
     ]);
 
     $this->actingAs($user)
-        ->get('/dashboard/history/' . $crawlJob->id)
+        ->get('/dashboard/history/'.$crawlJob->id)
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('dashboard/HistoryDetail')
@@ -58,6 +58,6 @@ test('history detail returns 403 for other tenant', function () {
     ]);
 
     $this->actingAs($user2)
-        ->get('/dashboard/history/' . $crawlJob->id)
+        ->get('/dashboard/history/'.$crawlJob->id)
         ->assertForbidden();
 });

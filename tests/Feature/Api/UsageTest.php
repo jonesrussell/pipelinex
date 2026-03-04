@@ -15,7 +15,7 @@ test('GET /api/v1/usage returns usage stats', function () {
         'completed_at' => now(),
     ]);
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->getJson('/api/v1/usage')
         ->assertOk()
         ->assertJsonPath('plan', 'free')
@@ -51,7 +51,7 @@ test('GET /api/v1/usage only counts current month', function () {
         'completed_at' => now(),
     ]);
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->getJson('/api/v1/usage')
         ->assertOk()
         ->assertJsonPath('crawls.used', 2);

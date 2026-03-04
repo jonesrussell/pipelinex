@@ -39,7 +39,7 @@ test('full crawl flow returns structured data', function () {
     $tenant = $user->tenant;
     $key = $tenant->generateApiKey('Test', 'live');
 
-    $response = $this->withHeader('Authorization', 'Bearer ' . $key['key'])
+    $response = $this->withHeader('Authorization', 'Bearer '.$key['key'])
         ->postJson('/api/v1/crawl', ['url' => 'https://example.com/article']);
 
     // With sync queue driver, job runs immediately; with timeout=1, poll finds it
@@ -76,7 +76,7 @@ test('full crawl flow handles NC failure', function () {
     $user = User::factory()->create();
     $key = $user->tenant->generateApiKey('Test', 'live');
 
-    $response = $this->withHeader('Authorization', 'Bearer ' . $key['key'])
+    $response = $this->withHeader('Authorization', 'Bearer '.$key['key'])
         ->postJson('/api/v1/crawl', ['url' => 'https://example.com/failing']);
 
     // The job fails, and sync-wait finds the failed status
@@ -119,15 +119,15 @@ test('retrieve completed crawl via GET endpoint', function () {
     $key = $user->tenant->generateApiKey('Test', 'live');
 
     // First, crawl
-    $crawlResponse = $this->withHeader('Authorization', 'Bearer ' . $key['key'])
+    $crawlResponse = $this->withHeader('Authorization', 'Bearer '.$key['key'])
         ->postJson('/api/v1/crawl', ['url' => 'https://example.com/article']);
 
     $crawlResponse->assertOk();
     $crawlId = $crawlResponse->json('id');
 
     // Then retrieve by ID
-    $this->withHeader('Authorization', 'Bearer ' . $key['key'])
-        ->getJson('/api/v1/crawl/' . $crawlId)
+    $this->withHeader('Authorization', 'Bearer '.$key['key'])
+        ->getJson('/api/v1/crawl/'.$crawlId)
         ->assertOk()
         ->assertJsonPath('status', 'completed')
         ->assertJsonPath('data.title', 'Test');
@@ -167,11 +167,11 @@ test('usage endpoint reflects completed crawls', function () {
     $key = $user->tenant->generateApiKey('Test', 'live');
 
     // Do a crawl
-    $this->withHeader('Authorization', 'Bearer ' . $key['key'])
+    $this->withHeader('Authorization', 'Bearer '.$key['key'])
         ->postJson('/api/v1/crawl', ['url' => 'https://example.com']);
 
     // Check usage
-    $this->withHeader('Authorization', 'Bearer ' . $key['key'])
+    $this->withHeader('Authorization', 'Bearer '.$key['key'])
         ->getJson('/api/v1/usage')
         ->assertOk()
         ->assertJsonPath('crawls.used', 1)

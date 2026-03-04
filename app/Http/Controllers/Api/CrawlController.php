@@ -61,7 +61,7 @@ class CrawlController extends Controller
             'id' => $crawlJob->id,
             'status' => 'processing',
             'url' => $crawlJob->url,
-            'poll_url' => '/api/v1/crawl/' . $crawlJob->id,
+            'poll_url' => '/api/v1/crawl/'.$crawlJob->id,
         ], 202);
     }
 
@@ -73,7 +73,7 @@ class CrawlController extends Controller
             ->where('tenant_id', $tenant->id)
             ->find($id);
 
-        if (!$crawlJob) {
+        if (! $crawlJob) {
             return response()->json([
                 'error' => 'not_found',
                 'message' => 'Crawl result not found or expired',
@@ -85,7 +85,7 @@ class CrawlController extends Controller
                 'id' => $crawlJob->id,
                 'status' => 'processing',
                 'url' => $crawlJob->url,
-                'poll_url' => '/api/v1/crawl/' . $crawlJob->id,
+                'poll_url' => '/api/v1/crawl/'.$crawlJob->id,
             ]);
         }
 

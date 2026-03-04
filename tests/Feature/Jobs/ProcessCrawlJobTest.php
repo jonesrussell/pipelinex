@@ -2,7 +2,6 @@
 
 use App\Jobs\ProcessCrawlJob;
 use App\Models\CrawlJob;
-use App\Models\CrawlResult;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 

@@ -15,7 +15,7 @@ test('POST /api/v1/crawl validates url', function () {
     $user = User::factory()->create();
     $result = $user->tenant->generateApiKey('Test', 'live');
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->postJson('/api/v1/crawl', ['url' => 'not-a-url'])
         ->assertUnprocessable();
 });
@@ -24,7 +24,7 @@ test('POST /api/v1/crawl validates url is required', function () {
     $user = User::factory()->create();
     $result = $user->tenant->generateApiKey('Test', 'live');
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->postJson('/api/v1/crawl', [])
         ->assertUnprocessable();
 });
@@ -35,7 +35,7 @@ test('POST /api/v1/crawl dispatches job and returns 202 when queue is faked', fu
     $user = User::factory()->create();
     $result = $user->tenant->generateApiKey('Test', 'live');
 
-    $response = $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $response = $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->postJson('/api/v1/crawl', ['url' => 'https://example.com/article']);
 
     $response->assertStatus(202)
@@ -50,7 +50,7 @@ test('POST /api/v1/crawl creates crawl job record', function () {
     $user = User::factory()->create();
     $result = $user->tenant->generateApiKey('Test', 'live');
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->postJson('/api/v1/crawl', ['url' => 'https://example.com/article']);
 
     $this->assertDatabaseHas('crawl_jobs', [
@@ -87,8 +87,8 @@ test('GET /api/v1/crawl/{id} returns completed result', function () {
         'content_type' => 'text/html',
     ]);
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
-        ->getJson('/api/v1/crawl/' . $crawlJob->id)
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
+        ->getJson('/api/v1/crawl/'.$crawlJob->id)
         ->assertOk()
         ->assertJsonPath('status', 'completed')
         ->assertJsonPath('data.title', 'Test Article')
@@ -111,8 +111,8 @@ test('GET /api/v1/crawl/{id} returns processing status', function () {
         'status' => 'processing',
     ]);
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
-        ->getJson('/api/v1/crawl/' . $crawlJob->id)
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
+        ->getJson('/api/v1/crawl/'.$crawlJob->id)
         ->assertOk()
         ->assertJsonPath('status', 'processing')
         ->assertJsonStructure(['id', 'status', 'url', 'poll_url']);
@@ -132,8 +132,8 @@ test('GET /api/v1/crawl/{id} returns 404 for other tenant', function () {
     ]);
 
     // user2 tries to access user1's crawl job
-    $this->withHeader('Authorization', 'Bearer ' . $key2['key'])
-        ->getJson('/api/v1/crawl/' . $crawlJob->id)
+    $this->withHeader('Authorization', 'Bearer '.$key2['key'])
+        ->getJson('/api/v1/crawl/'.$crawlJob->id)
         ->assertNotFound();
 });
 
@@ -141,7 +141,7 @@ test('GET /api/v1/crawl/{id} returns 404 for nonexistent job', function () {
     $user = User::factory()->create();
     $result = $user->tenant->generateApiKey('Test', 'live');
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->getJson('/api/v1/crawl/crawl_nonexistent')
         ->assertNotFound();
 });
@@ -160,8 +160,8 @@ test('GET /api/v1/crawl/{id} returns failed status', function () {
         'completed_at' => now(),
     ]);
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
-        ->getJson('/api/v1/crawl/' . $crawlJob->id)
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
+        ->getJson('/api/v1/crawl/'.$crawlJob->id)
         ->assertOk()
         ->assertJsonPath('status', 'failed')
         ->assertJsonPath('error.code', 'processing_error')
@@ -174,7 +174,7 @@ test('POST /api/v1/crawl stores options', function () {
     $user = User::factory()->create();
     $result = $user->tenant->generateApiKey('Test', 'live');
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->postJson('/api/v1/crawl', [
             'url' => 'https://example.com',
             'options' => ['timeout' => 20, 'include_html' => true],
@@ -189,7 +189,7 @@ test('POST /api/v1/crawl rejects invalid timeout', function () {
     $user = User::factory()->create();
     $result = $user->tenant->generateApiKey('Test', 'live');
 
-    $this->withHeader('Authorization', 'Bearer ' . $result['key'])
+    $this->withHeader('Authorization', 'Bearer '.$result['key'])
         ->postJson('/api/v1/crawl', [
             'url' => 'https://example.com',
             'options' => ['timeout' => 999],

@@ -55,7 +55,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
-            if ($request->is('api/*') && !$request->expectsJson()) {
+            if ($request->is('api/*') && ! $request->expectsJson()) {
                 return response()->json([
                     'error' => 'internal_error',
                     'message' => app()->isProduction() ? 'An unexpected error occurred' : $e->getMessage(),

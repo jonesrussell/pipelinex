@@ -16,6 +16,7 @@ class ProcessCrawlJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 1;
+
     public int $timeout = 45;
 
     public function __construct(

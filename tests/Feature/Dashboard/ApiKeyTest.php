@@ -32,7 +32,7 @@ test('can revoke api key', function () {
     $result = $user->tenant->generateApiKey('To Revoke', 'live');
 
     $this->actingAs($user)
-        ->delete('/dashboard/api-keys/' . $result['apiKey']->id)
+        ->delete('/dashboard/api-keys/'.$result['apiKey']->id)
         ->assertRedirect('/dashboard/api-keys');
 
     $result['apiKey']->refresh();
@@ -45,6 +45,6 @@ test('cannot revoke another tenant api key', function () {
     $result = $user1->tenant->generateApiKey('Not Yours', 'live');
 
     $this->actingAs($user2)
-        ->delete('/dashboard/api-keys/' . $result['apiKey']->id)
+        ->delete('/dashboard/api-keys/'.$result['apiKey']->id)
         ->assertForbidden();
 });

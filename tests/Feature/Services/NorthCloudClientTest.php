@@ -13,7 +13,7 @@ test('fetch calls crawler endpoint', function () {
         ]),
     ]);
 
-    $client = new NorthCloudClient();
+    $client = new NorthCloudClient;
     $result = $client->fetch('https://example.com');
 
     expect($result['title'])->toBe('Test');
@@ -32,7 +32,7 @@ test('extract calls classifier endpoint', function () {
         ]),
     ]);
 
-    $client = new NorthCloudClient();
+    $client = new NorthCloudClient;
     $result = $client->extract('<html>test</html>', 'https://example.com');
 
     expect($result['quality_score'])->toBe(85);
@@ -43,7 +43,7 @@ test('healthy returns true when services respond', function () {
         '*/health' => Http::response(['status' => 'ok']),
     ]);
 
-    $client = new NorthCloudClient();
+    $client = new NorthCloudClient;
     expect($client->healthy())->toBeTrue();
 });
 
@@ -52,6 +52,6 @@ test('healthy returns false when services are down', function () {
         '*/health' => Http::response(null, 500),
     ]);
 
-    $client = new NorthCloudClient();
+    $client = new NorthCloudClient;
     expect($client->healthy())->toBeFalse();
 });
