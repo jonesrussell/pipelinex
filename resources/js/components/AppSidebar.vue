@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Play, Clock, Key, BarChart3 } from 'lucide-vue-next';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -13,16 +13,16 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import AppLogo from './AppLogo.vue';
-import { dashboard } from '@/routes';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
+    { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid },
+    { title: 'Playground', href: '/dashboard/crawl', icon: Play },
+    { title: 'History', href: '/dashboard/history', icon: Clock },
+    { title: 'API Keys', href: '/dashboard/api-keys', icon: Key },
+    { title: 'Usage', href: '/dashboard/usage', icon: BarChart3 },
 ];
 
 const footerNavItems: NavItem[] = [
