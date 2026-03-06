@@ -15,18 +15,27 @@
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["web-scraping", "crawler", "cli", "pipelinex"],
+  "keywords": [
+    "web-scraping",
+    "crawler",
+    "cli",
+    "pipelinex"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=20"
   },
-  "files": ["dist", "bin"],
+  "files": [
+    "dist",
+    "bin"
+  ],
   "dependencies": {
     "chalk": "^5.4.0",
     "commander": "^13.0.0",
     "ora": "^8.0.0"
   },
   "devDependencies": {
+    "@types/node": "^22.19.15",
     "tsup": "^8.0.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
