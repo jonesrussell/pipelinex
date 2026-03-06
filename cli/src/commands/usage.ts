@@ -1,7 +1,7 @@
-import { Command } from 'commander';
 import chalk from 'chalk';
-import { PipelinexClient } from '../lib/client.js';
+import { Command } from 'commander';
 import { resolveApiKey, resolveApiUrl } from '../lib/auth.js';
+import { PipelinexClient } from '../lib/client.js';
 import { resolveFormat, formatUsage } from '../lib/output.js';
 import type { GlobalOptions } from '../types.js';
 

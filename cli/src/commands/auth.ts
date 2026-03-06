@@ -1,6 +1,6 @@
-import { Command } from 'commander';
-import chalk from 'chalk';
 import readline from 'node:readline';
+import chalk from 'chalk';
+import { Command } from 'commander';
 
 import { resolveApiKey, resolveNorthCloudSecret } from '../lib/auth.js';
 import { readConfig, writeConfig } from '../lib/config.js';
