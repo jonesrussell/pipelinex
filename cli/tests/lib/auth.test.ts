@@ -35,9 +35,11 @@ describe('resolveApiKey', () => {
     });
 
     it('returns undefined when nothing is configured', async () => {
-        const { resolveApiKey: resolve } = await vi.importActual<
-            typeof import('../../src/lib/auth.js')
-        >('../../src/lib/auth.js');
-        expect(resolveApiKey(undefined)).toBe('px_test_fromconfig');
+        const { readConfig } = vi.mocked(
+            await import('../../src/lib/config.js')
+        );
+        readConfig.mockReturnValueOnce({});
+        const key = resolveApiKey(undefined);
+        expect(key).toBeUndefined();
     });
 });
