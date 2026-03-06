@@ -84,6 +84,8 @@ async function scrapeDirect(
     }
 
     const client = new NorthCloudDirectClient(ncUrl, ncSecret);
+    // --timeout is in ms (matching API mode's polling deadline), but the
+    // north-cloud crawler expects seconds, so convert here.
     const timeout = Math.floor(parseInt(options.timeout, 10) / 1000);
     return client.scrape(url, timeout);
 }
