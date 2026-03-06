@@ -29,3 +29,5 @@ yarn-error.log
 /cli/node_modules
 /cli/dist
 .worktrees
+tools/spec-retrieval/node_modules/
+tools/spec-retrieval/node_modules/
