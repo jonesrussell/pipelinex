@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 
 import { authCommand } from './commands/auth.js';
+import { scrapeCommand } from './commands/scrape.js';
 
 const program = new Command();
 
@@ -18,5 +19,6 @@ program
     .option('--no-color', 'Disable colored output');
 
 program.addCommand(authCommand);
+program.addCommand(scrapeCommand);
 
 program.parse();
