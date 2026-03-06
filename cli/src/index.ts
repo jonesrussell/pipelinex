@@ -16,9 +16,7 @@ program
         '--format <format>',
         'Output format: markdown, json, html'
     )
-    .option('--api-url <url>', 'Custom API base URL')
-    .option('--verbose', 'Show request/response details')
-    .option('--no-color', 'Disable colored output');
+    .option('--api-url <url>', 'Custom API base URL');
 
 program.addCommand(authCommand);
 program.addCommand(crawlCommand);

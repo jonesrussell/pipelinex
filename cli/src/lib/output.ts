@@ -81,7 +81,10 @@ export function formatUsage(
     }
 
     const u = usage.usage;
-    const pct = Math.round((u.crawls_used / u.crawls_limit) * 100);
+    const pct =
+        u.crawls_limit > 0
+            ? Math.round((u.crawls_used / u.crawls_limit) * 100)
+            : 0;
     const lines = [
         `Plan: ${usage.plan}`,
         `Usage: ${u.crawls_used} / ${u.crawls_limit} crawls (${pct}%)`,

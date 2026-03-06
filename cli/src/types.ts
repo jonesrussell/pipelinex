@@ -7,7 +7,6 @@ export interface GlobalOptions {
     apiKey?: string;
     apiUrl?: string;
     format?: 'markdown' | 'json' | 'html';
-    verbose?: boolean;
 }
 
 export interface CrawlResponse {

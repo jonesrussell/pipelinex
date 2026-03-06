@@ -17,6 +17,8 @@ export function readConfig(): PipelinexConfig {
 }
 
 export function writeConfig(config: PipelinexConfig): void {
-    fs.mkdirSync(CONFIG_DIR, { recursive: true });
-    fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2) + '\n');
+    fs.mkdirSync(CONFIG_DIR, { recursive: true, mode: 0o700 });
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2) + '\n', {
+        mode: 0o600,
+    });
 }
