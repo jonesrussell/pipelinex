@@ -1,0 +1,13 @@
+{
+  "name": "pipelinex-spec-retrieval",
+  "version": "1.0.0",
+  "description": "MCP server for retrieving PipelineX subsystem specs",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1"
+  }
+}
