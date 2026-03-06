@@ -2,8 +2,15 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 
-import { resolveApiKey, resolveApiUrl } from '../lib/auth.js';
+import {
+    resolveApiKey,
+    resolveApiUrl,
+    resolveMode,
+    resolveNorthCloudSecret,
+    resolveNorthCloudUrl,
+} from '../lib/auth.js';
 import { PipelinexClient } from '../lib/client.js';
+import { NorthCloudDirectClient } from '../lib/north-cloud-client.js';
 import { formatCrawlResult, resolveFormat } from '../lib/output.js';
 import type { CrawlResponse, GlobalOptions } from '../types.js';
 
@@ -16,20 +23,8 @@ export const scrapeCommand = new Command('scrape')
     .option('--exclude-tags <tags>', 'Exclude specific HTML tags')
     .action(async (url: string, options, command: Command) => {
         const globalOpts = command.parent?.opts() as GlobalOptions;
-        const apiKey = resolveApiKey(globalOpts?.apiKey);
-
-        if (!apiKey) {
-            console.error(
-                chalk.red(
-                    'No API key found. Run "pipelinex auth" or set PIPELINEX_API_KEY.'
-                )
-            );
-            process.exit(1);
-        }
-
-        const apiUrl = resolveApiUrl(globalOpts?.apiUrl);
-        const client = new PipelinexClient(apiUrl, apiKey);
         const format = resolveFormat(globalOpts?.format);
+        const mode = resolveMode();
 
         const spinner = process.stderr.isTTY
             ? ora({
@@ -39,27 +34,15 @@ export const scrapeCommand = new Command('scrape')
             : null;
 
         try {
-            const crawlOptions: Record<string, unknown> = {
-                limit: 1,
-            };
-            if (options.waitFor)
-                crawlOptions.wait_for = options.waitFor;
-            if (options.includeTags)
-                crawlOptions.include_tags =
-                    options.includeTags.split(',');
-            if (options.excludeTags)
-                crawlOptions.exclude_tags =
-                    options.excludeTags.split(',');
+            let result: CrawlResponse;
 
-            let result = await client.crawl(url, crawlOptions);
-
-            // Poll if async
-            if (result.status === 'processing' && result.id) {
-                const timeout = parseInt(options.timeout, 10);
-                result = await pollForResult(
-                    client,
-                    result.id,
-                    timeout,
+            if (mode === 'direct') {
+                result = await scrapeDirect(url, options);
+            } else {
+                result = await scrapeViaApi(
+                    url,
+                    options,
+                    globalOpts,
                     spinner
                 );
             }
@@ -86,6 +69,66 @@ export const scrapeCommand = new Command('scrape')
             process.exit(1);
         }
     });
+
+async function scrapeDirect(
+    url: string,
+    options: Record<string, string>
+): Promise<CrawlResponse> {
+    const ncUrl = resolveNorthCloudUrl();
+    const ncSecret = resolveNorthCloudSecret();
+
+    if (!ncSecret) {
+        throw new Error(
+            'No credentials configured. Run "pipelinex auth" for API mode or "pipelinex auth --direct" for direct mode.'
+        );
+    }
+
+    const client = new NorthCloudDirectClient(ncUrl, ncSecret);
+    const timeout = Math.floor(parseInt(options.timeout, 10) / 1000);
+    return client.scrape(url, timeout);
+}
+
+async function scrapeViaApi(
+    url: string,
+    options: Record<string, string>,
+    globalOpts: GlobalOptions,
+    spinner: ReturnType<typeof ora> | null
+): Promise<CrawlResponse> {
+    const apiKey = resolveApiKey(globalOpts?.apiKey);
+
+    if (!apiKey) {
+        throw new Error(
+            'No API key found. Run "pipelinex auth" or set PIPELINEX_API_KEY.'
+        );
+    }
+
+    const apiUrl = resolveApiUrl(globalOpts?.apiUrl);
+    const client = new PipelinexClient(apiUrl, apiKey);
+
+    const crawlOptions: Record<string, unknown> = { limit: 1 };
+    if (options.waitFor)
+        crawlOptions.wait_for = options.waitFor;
+    if (options.includeTags)
+        crawlOptions.include_tags =
+            options.includeTags.split(',');
+    if (options.excludeTags)
+        crawlOptions.exclude_tags =
+            options.excludeTags.split(',');
+
+    let result = await client.crawl(url, crawlOptions);
+
+    if (result.status === 'processing' && result.id) {
+        const timeout = parseInt(options.timeout, 10);
+        result = await pollForResult(
+            client,
+            result.id,
+            timeout,
+            spinner
+        );
+    }
+
+    return result;
+}
 
 async function pollForResult(
     client: PipelinexClient,

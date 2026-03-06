@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { resolveApiKey } from '../../src/lib/auth.js';
+import { resolveApiKey, resolveMode } from '../../src/lib/auth.js';
 
 vi.mock('../../src/lib/config.js', () => ({
     readConfig: vi.fn(() => ({ apiKey: 'px_test_fromconfig' })),
@@ -41,5 +41,54 @@ describe('resolveApiKey', () => {
         readConfig.mockReturnValueOnce({});
         const key = resolveApiKey(undefined);
         expect(key).toBeUndefined();
+    });
+});
+
+describe('resolveMode', () => {
+    const originalEnv = process.env;
+
+    beforeEach(() => {
+        process.env = { ...originalEnv };
+        delete process.env.PIPELINEX_API_KEY;
+    });
+
+    afterEach(() => {
+        process.env = originalEnv;
+    });
+
+    it('returns direct when northCloudUrl and northCloudSecret are configured', async () => {
+        const { readConfig } = vi.mocked(
+            await import('../../src/lib/config.js')
+        );
+        readConfig.mockReturnValueOnce({
+            northCloudUrl: 'https://northcloud.one',
+            northCloudSecret: 'secret123',
+        });
+        expect(resolveMode()).toBe('direct');
+    });
+
+    it('returns api when only apiKey is configured', async () => {
+        const { readConfig } = vi.mocked(
+            await import('../../src/lib/config.js')
+        );
+        readConfig.mockReturnValueOnce({ apiKey: 'px_test_key' });
+        expect(resolveMode()).toBe('api');
+    });
+
+    it('returns api when PIPELINEX_API_KEY env var is set', async () => {
+        const { readConfig } = vi.mocked(
+            await import('../../src/lib/config.js')
+        );
+        readConfig.mockReturnValueOnce({});
+        process.env.PIPELINEX_API_KEY = 'px_test_env';
+        expect(resolveMode()).toBe('api');
+    });
+
+    it('returns direct when nothing is configured', async () => {
+        const { readConfig } = vi.mocked(
+            await import('../../src/lib/config.js')
+        );
+        readConfig.mockReturnValueOnce({});
+        expect(resolveMode()).toBe('direct');
     });
 });

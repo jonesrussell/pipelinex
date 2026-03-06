@@ -2,7 +2,11 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 
-import { resolveApiKey, resolveApiUrl } from '../lib/auth.js';
+import {
+    resolveApiKey,
+    resolveApiUrl,
+    resolveMode,
+} from '../lib/auth.js';
 import { PipelinexClient } from '../lib/client.js';
 import { formatCrawlResult, resolveFormat } from '../lib/output.js';
 import type { CrawlResponse, GlobalOptions } from '../types.js';
@@ -22,6 +26,16 @@ export const crawlCommand = new Command('crawl')
     .option('--timeout <ms>', 'Request timeout in ms', '120000')
     .action(async (url: string, options, command: Command) => {
         const globalOpts = command.parent?.opts() as GlobalOptions;
+        const mode = resolveMode();
+        if (mode === 'direct') {
+            console.error(
+                chalk.yellow(
+                    'Multi-page crawl is not supported in direct mode. Use "pipelinex scrape" for single pages, or configure a PipelineX API key with "pipelinex auth".'
+                )
+            );
+            process.exit(1);
+        }
+
         const apiKey = resolveApiKey(globalOpts?.apiKey);
 
         if (!apiKey) {

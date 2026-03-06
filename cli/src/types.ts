@@ -1,6 +1,8 @@
 export interface PipelinexConfig {
     apiKey?: string;
     apiUrl?: string;
+    northCloudUrl?: string;
+    northCloudSecret?: string;
 }
 
 export interface GlobalOptions {
