@@ -1,0 +1,34 @@
+{
+  "name": "@pipelinex/cli",
+  "version": "0.1.0",
+  "description": "PipelineX CLI - Web scraping from the command line",
+  "type": "module",
+  "bin": {
+    "pipelinex": "./bin/pipelinex.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["web-scraping", "crawler", "cli", "pipelinex"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": ["dist", "bin"],
+  "dependencies": {
+    "chalk": "^5.4.0",
+    "commander": "^13.0.0",
+    "ora": "^8.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
