@@ -45,7 +45,7 @@ describe('auth --direct', () => {
             .mockImplementationOnce((_q: string, cb: (answer: string) => void) => cb('my-secret'));
 
         const { authCommand } = await import('../../src/commands/auth.js');
-        await authCommand.parseAsync(['auth', '--direct'], { from: 'user' });
+        await authCommand.parseAsync(['node', 'pipelinex', '--direct']);
 
         expect(writeConfig).toHaveBeenCalledWith({
             northCloudUrl: 'https://northcloud.test',
@@ -59,7 +59,7 @@ describe('auth --direct', () => {
             .mockImplementationOnce((_q: string, cb: (answer: string) => void) => cb('my-secret'));
 
         const { authCommand } = await import('../../src/commands/auth.js');
-        await authCommand.parseAsync(['auth', '--direct'], { from: 'user' });
+        await authCommand.parseAsync(['node', 'pipelinex', '--direct']);
 
         expect(writeConfig).toHaveBeenCalledWith({
             northCloudUrl: 'https://northcloud.one',
@@ -73,7 +73,7 @@ describe('auth --direct', () => {
             .mockImplementationOnce((_q: string, cb: (answer: string) => void) => cb(''));
 
         const { authCommand } = await import('../../src/commands/auth.js');
-        await authCommand.parseAsync(['auth', '--direct'], { from: 'user' });
+        await authCommand.parseAsync(['node', 'pipelinex', '--direct']);
 
         expect(process.exit).toHaveBeenCalledWith(1);
     });

@@ -6,7 +6,7 @@ export function resolveMode(): ClientMode {
     const config = readConfig();
     if (config.northCloudUrl && config.northCloudSecret) return 'direct';
     if (config.apiKey || process.env.PIPELINEX_API_KEY) return 'api';
-    return 'direct';
+    return 'api';
 }
 
 export function resolveApiKey(flagValue?: string): string | undefined {

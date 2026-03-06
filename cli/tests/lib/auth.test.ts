@@ -84,11 +84,11 @@ describe('resolveMode', () => {
         expect(resolveMode()).toBe('api');
     });
 
-    it('returns direct when nothing is configured', async () => {
+    it('returns api when nothing is configured', async () => {
         const { readConfig } = vi.mocked(
             await import('../../src/lib/config.js')
         );
         readConfig.mockReturnValueOnce({});
-        expect(resolveMode()).toBe('direct');
+        expect(resolveMode()).toBe('api');
     });
 });
