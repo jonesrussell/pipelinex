@@ -30,4 +30,3 @@ yarn-error.log
 /cli/dist
 .worktrees
 tools/spec-retrieval/node_modules/
-tools/spec-retrieval/node_modules/
