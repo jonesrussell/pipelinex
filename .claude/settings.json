@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "spec-retrieval": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["tools/spec-retrieval/server.js"]
+    }
+  }
+}
