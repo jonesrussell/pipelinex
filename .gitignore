@@ -28,3 +28,4 @@ yarn-error.log
 /.zed
 /cli/node_modules
 /cli/dist
+.worktrees
