@@ -5,5 +5,19 @@
       "command": "node",
       "args": ["tools/spec-retrieval/server.js"]
     }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tools/drift-detector.sh 20 2>&1",
+            "show_output": true
+          }
+        ]
+      }
+    ]
   }
 }
